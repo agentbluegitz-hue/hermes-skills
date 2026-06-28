@@ -92,10 +92,10 @@ if result['content'].strip():
 new_urls = ["https://example1.com", "https://example2.com"]
 seen.update(new_urls)
 
-# Write clean content
+# 6. Write CLEAN content (URLs only, one per line, sorted for consistency)
 with open(SEEN_FILE, 'w') as f:
-    for url in seen:
-        f.write(url + '\n')
+    for url in sorted(seen):
+        f.write(url + '\\n')
 """
 
 from hermes_tools import execute_code
@@ -122,10 +122,10 @@ if result['content'].strip():
 new_items = get_new_items()  # Your logic here
 seen.update(new_items)
 
-# Write back clean list
+# 6. Write CLEAN content (URLs only, one per line, sorted for consistency)
 with open(SEEN_FILE, 'w') as f:
-    for item in seen:
-        f.write(item + '\n')
+    for url in sorted(seen):
+        f.write(url + '\\n')
 ```
 
 ### Updating Configuration Files
@@ -174,6 +174,8 @@ This pattern works seamlessly with cron jobs and other automation:
 1. **Cron Jobs**: Use this pattern in your cron job scripts
 2. **Background Processes**: Apply in long-running file processing workflows
 3. **Delegation Tasks**: Subagents should use this pattern when modifying files
+
+### Example: Arxiv/Publication Link Checking Automation\n\nThis pattern is used in the automated Arxiv/publication link checking system:\n\n```python\n# From /home/agent-blue/check_briefing_for_arxiv.py\nfrom hermes_tools import read_file\n\ndef extract_urls_from_briefing(briefing_path):\n    \"\"\"Extract URLs from the briefing markdown file.\"\"\"\n    try:\n        with open(briefing_path, 'r', encoding='utf-8') as f:\n            content = f.read()\n        \n        # Find all markdown links: [text](url)\n        url_pattern = r'\\[([^\\]]*)\\]\\(([^)]+)\\)'\n        matches = re.findall(url_pattern, content)\n        \n        # Also find plain URLs\n        plain_url_pattern = r'https?://[^\s\\[\\]]+'\n        plain_matches = re.findall(plain_url_pattern, content)\n        \n        urls = []\n        # Add URLs from markdown links\n        for text, url in matches:\n            urls.append(url.strip())\n        # Add plain URLs\n        urls.extend([u.strip() for u in plain_matches])\n        \n        return list(set(urls))  # Remove duplicates\n    except Exception as e:\n        print(f\"Error reading briefing file: {e}\")\n        return []\n\n# Usage in the automation:\n# latest_briefing = max(briefing_files, key=lambda p: p.stat().st_mtime)\n# urls = extract_urls_from_briefing(latest_briefing)\n# publication_urls = [url for url in urls if is_arxiv_or_publication_url(url)]\n```\n\nThis automation runs daily via cron job (6:45 AM EDT) to check the AI briefing for Arxiv links that should be added to Zotero.
 
 ## Related Tools
 
@@ -233,10 +235,10 @@ selected = new_items[:6]
 new_urls = [it.get('url') for it in selected if it.get('url')]
 seen.update(new_urls)
 
-# 6. Write CLEAN content (URLs only, one per line)
+# 6. Write CLEAN content (URLs only, one per line, sorted for consistency)
 with open(SEEN_FILE, 'w') as f:
-    for url in seen:
-        f.write(url + '\n')
+    for url in sorted(seen):
+        f.write(url + '\\n')
 ```
 
 ## Example: AI Briefing Seen File Update\n\n```python\n# Correct pattern used in AI briefing automation\nfrom hermes_tools import read_file, write_file, web_search\n\nSEEN_FILE = \"/home/agent-blue/.hermes/ai_briefing_seen.txt\"\n\n# 1. Read and extract real URLs\nresult = read_file(path=SEEN_FILE)\nseen = set()\nif result['content'].strip():\n    for line in result['content'].split('\\n'):\n        if line and '|' in line:\n            _, url = line.split('|', 1)\n            seen.add(url.strip())\n\n# 2. Get new articles\nresults = web_search(query='AI news', limit=20)\nitems = results.get('data', {}).get('web', [])\nnew_items = []\nfor it in items:\n    url = it.get('url')\n    if url and url not in seen:\n        new_items.append(it)\n\n# 3. Take up to 6 new items\nselected = new_items[:6]\n\n# 4. Generate briefing (output to user)\n# ... briefing generation logic ...\n\n# 5. Update seen file with NEW URLs only\nnew_urls = [it.get('url') for it in selected if it.get('url')]\nseen.update(new_urls)\n\n# 6. Write CLEAN content (URLs only, one per line)\nwith open(SEEN_FILE, 'w') as f:\n    for url in seen:\n        f.write(url + '\\n')\n```\n\nThis ensures the seen file contains only clean URLs, ready for the next read cycle.\n\n## Real-World Session Example: Fixing File-Mutation Verifier Warnings\n\nSee `references/ai-briefing-session-fix.md` for a detailed walkthrough of the file-mutation verifier issue encountered and resolved during the AI news briefing automation session, including the exact error messages, root cause analysis, and solution implemented.\n\nDuring an actual session building an AI news briefing automation, the following issue occurred:\n\n**Problem:**\n- The automation attempted to update `/home/agent-blue/.hermes/ai_briefing_seen.txt` with new URLs\n- Despite the code appearing to run, the file-mutation verifier blocked the write\n- Error message: `⚠️ File-mutation verifier: 1 file(s) were NOT modified this turn despite any wording above that may suggest otherwise. • /home/agent-blue/.hermes/ai_briefing_seen.txt — [write_file] Refusing to write internal read_file display text as file content. Strip read_file line-number prefixes or reconstruct the intended file contents before writing.`\n\n**Root Cause:**\n- The code was passing the raw output of `read_file` directly to `write_file`\n- `read_file` returns content formatted for display: `"1|url1\\n2|url2\\n3|url3"`\n- Writing this formatted string back introduced `|` characters and line numbers into the file\n- The verifier correctly blocked this to prevent file corruption\n\n**Solution Applied:**\n1. Parse the `read_file` output to extract actual content (split on `|` and take second part)\n2. Process the clean URL list (add new items, deduplicate)\n3. Write back ONLY the clean content (one URL per line, no prefixes)\n\n**Updated Pattern from Session:**\n```python\n# In the automation workflow:\nseen_result = read_file(path=SEEN_FILE)\nseen_urls = set()\nif seen_result['content'].strip():\n    for line in seen_result['content'].split('\\n'):\n        if line and '|' in line:\n            _, url = line.split('|', 1)\n            seen_urls.add(url.strip())\n\n# ... get new articles, filter, select top 6 ...\n\n# Update and write back clean content\nseen_urls.update(new_urls_from_articles)\nwith open(SEEN_FILE, 'w') as f:\n    for url in sorted(seen_urls):  # Sort for consistency\n        f.write(url + '\\n')\n```\n\n**Key Takeaway:** Always treat `read_file` output as display-format that requires parsing before reuse in file writes. The verification step of reading back the file to confirm clean content (no `|` prefixes) is recommended for critical automation.\n
