@@ -183,6 +183,18 @@ When initial analysis suggests missing domains or when users suspect specific co
 - To file an item: 1) Get full item via `zot.item(item_key)`, 2) Extract data portion, 3) Ensure 'collections' field exists, 4) Add collection key, 5) Update item with `zot.update_item(item_data)`
 - Direct item updates require working only with the item's 'data' field to avoid errors with meta/library/links fields
 - Always verify collection operations by checking item collections after updates
+
+### Lesson 8: Automated Arxiv Paper Filing from AI Briefings
+- AI news briefings often contain links to recent Arxiv papers relevant to specific domains
+- Implement automated detection of Arxiv links in briefing content
+- File these papers directly into Zotero with appropriate tags
+- **Workflow**: 
+  1. Generate daily AI briefing with Arxiv paper detection
+  2. Extract Arxiv IDs/URLs from briefing
+  3. For each paper: get metadata, prepare Zotero item, file with relevant tags
+  4. Avoid duplicates by checking existing items
+  5. Use small batches and appropriate delays to prevent API overload
+- **Reference**: See `references/arxiv-paper-filing-lessons.md` for detailed workflow and implementation discovered during session with Matt
   2. Use direct API approach (requires credentials, works when desktop open)
   3. Use read-only copy of database
   4. Schedule operations for when Zotero is not running
@@ -277,3 +289,4 @@ Once organized, the library can power:
 5. **Maintenance Mode**: Set up periodic checks to keep new items organized
 6. **Optimized Processing**: Implement the batch processing strategies from `references/optimized-batch-processing-lessons.md` for all large-scale library operations
 7. **User Preference Integration**: Formalize the proactive-but-permission-based approach and regular progress reporting as core principles of the skill
+8. **Arxiv Integration**: Implement automated workflows to file new Arxiv papers from AI briefings into relevant Zotero collections (see `references/arxiv-paper-filing-lessons.md` as starting point)
