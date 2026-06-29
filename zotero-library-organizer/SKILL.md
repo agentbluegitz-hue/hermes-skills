@@ -180,9 +180,9 @@ When initial analysis suggests missing domains or when users suspect specific co
 
 ### Lesson 7: Correct API Usage for Collection Operations
 - The `zot.addto_collection()` method requires the full item dictionary (as returned by `zot.item()` or `zot.items()`), not just the item key
-- To file an item: 1) Get full item via `zot.item(item_key)`, 2) Extract data portion, 3) Ensure 'collections' field exists, 4) Add collection key, 5) Update item with `zot.update_item(item_data)`
-- Direct item updates require working only with the item's 'data' field to avoid errors with meta/library/links fields
-- Always verify collection operations by checking item collections after updates
+## Key Lessons Learned
+
+## Key Lessons Learned
 
 ### Lesson 8: Automated Arxiv Paper Filing from AI Briefings
 - AI news briefings often contain links to recent Arxiv papers relevant to specific domains
@@ -198,6 +198,17 @@ When initial analysis suggests missing domains or when users suspect specific co
   2. Use direct API approach (requires credentials, works when desktop open)
   3. Use read-only copy of database
   4. Schedule operations for when Zotero is not running
+
+### Lesson 9: Duplicate Merging Preserves Research Context
+- Duplicate items in Zotero libraries often contain complementary notes, tags, and metadata
+- Merging duplicates while combining notes preserves valuable research context
+- The merging process:
+  1. Identifies duplicates using multiple strategies (Arxiv ID, normalized title)
+  2. Selects the item with the richest note as the "keeper"
+  3. Combines notes from all duplicates with clear separators
+  4. Updates the keeper with the combined note
+  5. Safely deletes duplicate items
+- **Session Reference**: See `scripts/merge_zotero_duplicates.py` for the implementation that resolved duplicate management issues during the session with Matt
 
 ### Issue: Poor Search Results
 - **Cause**: Overly broad or narrow search terms
