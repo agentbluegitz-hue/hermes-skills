@@ -1,45 +1,62 @@
-# Avatar Image Scaling for Hermes Agent Website
+# Avatar Scaling Technique for Hermes Agent Website
 
-## User Preference: Scale Agent Blue Avatar to 50%
+## Problem
+The Agent Blue avatar image was originally 1000x1000px (~1.9MB) causing unnecessary bandwidth usage and potentially affecting page layout.
 
-During website development, the user requested that the Agent Blue avatar image be scaled down to approximately 50% of its original size for better page load performance and layout aesthetics.
+## Solution
+Use FFmpeg to scale images down to 50% while maintaining aspect ratio and quality.
 
-## Original Image Specifications
-- File: `~/Pictures/AgentBlue.png` 
-- Dimensions: 1000 × 1000 pixels
-- File Size: ~1.96 MB
-- Format: PNG with RGBA (transparency support)
-
-## Scaling Process Applied
-Using FFmpeg to resize the image while maintaining quality:
-
+## FFmpeg Command
 ```bash
-# Scale to 50% (500x500 pixels) - for general use
-ffmpeg -i input.png -vf "scale=iw*0.5:ih*0.5" -frames:v 1 output.png
-
-# Scale to 25% (250x250 pixels) - for avatar display in website
-ffmpeg -i input.png -vf "scale=iw*0.25:ih*0.25" -frames:v 1 output.png
+# Scale image to 50% width and height
+ffmpeg -y -i input.png -vf "scale=iw*0.5:ih*0.5" -vframes 1 output.png
 ```
 
-## Implementation in Hermes Agent Website
-1. Original avatar copied to website assets: `docs/assets/images/agent-blue-avatar.png`
-2. Scaled to 250×250 pixels (25% of original) for optimal display
-3. Final file size: ~140 KB (significant reduction from 1.96 MB)
-4. Referenced in Markdown using relative path: `![Agent Blue Avatar](assets/images/agent-blue-avatar.png)`
+## Parameters Explained
+- `-y`: Overwrite output file without asking
+- `-i input.png`: Input file path
+- `-vf "scale=iw*0.5:ih*0.5"`: Video filter to scale width and height to 50%
+- `-vframes 1`: Process only 1 frame (for images)
+- `output.png`: Output file path
+
+## Alternative Syntax
+```bash
+# Using explicit dimensions (calculated)
+ffmpeg -y -i input.png -vf "scale=500:500" -vframes 1 output.png
+
+# Using percentage notation
+ffmpeg -y -i input.png -vf "scale=0.5*iw:0.5*ih" -vframes 1 output.png
+```
 
 ## Verification
-- Confirmed image loads correctly on GitHub Pages: https://agentbluegitz-hue.github.io/hermes-agent-website/
-- Verified PNG format preservation: `file agent-blue-avatar.png` shows PNG image data
-- Confirmed dimensions: 250 × 250 pixels
-- Validated no loss of visual quality despite size reduction
+After scaling, verify:
+1. File size reduction (should be ~75% smaller for PNG)
+2. Dimensions: `identify output.png` or `file output.png`
+3. Visual quality: Check that important details remain visible
 
-## Best Practices for Future Images
-- Scale images to appropriate display dimensions before uploading
-- Use relative paths for assets in Zensical/Markdown content
-- Prefer modern placeholder services (placehold.co) over legacy ones (via.placeholder.com)
-- Test image loading in both local development (`zensical serve`) and deployed environments
-- Consider WebP format for further compression when transparency isn't required
+## Example from Session
+```bash
+# Original: 1000x1000px, 1.9MB
+ls -lh /home/agent-blue/.hermes/website/docs/assets/images/agent-blue-avatar.png
+# Output: -rw-rw-r-- 1 agent-blue agent-blue 1.9M Jun 30 13:44 agent-blue-avatar.png
 
-## Related References
-- See `github-pages-image-paths.md` for fixing asset path issues on GitHub Pages
-- See `zensical-config.md` for website configuration details
+# Scale to 50%
+cd /home/agent-blue/.hermes/website/docs/assets/images
+ffmpeg -y -i agent-blue-avatar.png -vf "scale=iw*0.5:ih*0.5" -vframes 1 agent-blue-avatar.png
+
+# Result: 500x500px, ~503KB
+ls -lh agent-blue-avatar.png
+# Output: -rw-rw-r-- 1 agent-blue agent-blue 503K Jun 30 14:16 agent-blue-avatar.png
+```
+
+## Best Practices
+1. Always keep original images backed up
+2. Test scaled images on actual web pages before deploying
+3. Consider different scaling percentages based on container size (25%, 33%, 50%, 75%)
+4. For web use, consider also optimizing with tools like `optipng` or `pngquant` after scaling
+5. Document the scaling factor used in case you need to reproduce or adjust later
+
+## Troubleshooting
+- "File already exists" error: Use `-y` flag to auto-overwrite
+- Invalid dimensions: Ensure width/height are even numbers for some codecs
+- Quality loss: Adjust with `-q:v` parameter (2-31 for PNG, lower is better)
