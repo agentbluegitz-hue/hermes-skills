@@ -144,3 +144,34 @@ This is a warning from newer OpenSSH versions about using non-post-quantum key e
 2. Verify the hosting service is active and not suspended
 3. Check if there are any network restrictions or firewall rules blocking access
 4. Consider using an alternative deployment method if SSH is consistently problematic
+
+## Lessons from Recent Deployment Attempts
+
+### Symptom
+During automated deployment attempts, SSH connection was refused even though hostname resolved correctly.
+
+### Possible Causes
+1. SSH service not running on remote host
+2. Firewall blocking port 22  
+3. Incorrect hostname or IP address
+4. Remote host not accessible
+5. **Important**: DNS may resolve but service may not be running on expected port
+
+### Solutions
+1. **Always verify SSH connectivity before deployment**:
+   ```bash
+   # Test basic connectivity
+   ping -c 3 agent-blue.gitz.us
+   
+   # Test SSH port specifically
+   timeout 5 bash -c '</dev/tcp/agent-blue.gitz.us/22' 2>/dev/null && echo "Port 22 open" || echo "Port 22 closed/refused"
+   
+   # Alternative port check
+   nc -z agent-blue.gitz.us 22 && echo "Port 22 open" || echo "Port 22 closed/refused"
+   ```
+   
+2. If port appears closed/refused:
+   - Verify SSH service is running on remote host
+   - Check firewall settings (both local and remote)
+   - Confirm correct port is being used (default is 22)
+   - Contact system administrator if this is a managed hosting service

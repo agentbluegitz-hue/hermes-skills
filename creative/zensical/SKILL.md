@@ -238,6 +238,7 @@ See `templates/deploy-script.sh` for a complete deployment script designed for u
 - **Git Metadata**: When deploying via rsync, consider excluding `.git/` if you don't want to deploy your Git history
 - **Theme Customization**: Some theme overrides require creating a `custom_dir` directory and understanding Zensical's templating system
 - **Path Resolution for GitHub Pages**: When deploying to GitHub Pages, use relative paths for assets (e.g., `assets/images/photo.png`) rather than absolute paths (`/assets/images/photo.png`). Absolute paths can break when the site is served from a subdirectory (like `username.github.io/repository/`). Zensical builds relative links correctly when configured properly, but manual HTML/Markdown overrides may need adjustment.
+- **Content Location**: **NEVER edit files directly in the `site/` directory** - this is generated output that will be overwritten. All source content (Markdown, images, etc.) must go in the `docs/` directory. Zensical automatically generates the `site/` directory from `docs/` during the build process. Editing `site/` directly is a common mistake that leads to lost work when the site is rebuilt.
 
 ## Verification
 
