@@ -177,14 +177,7 @@ This pattern works seamlessly with cron jobs and other automation:
 
 ### Example: Arxiv/Publication Link Checking Automation\n\nThis pattern is used in the automated Arxiv/publication link checking system:\n\n```python\n# From /home/agent-blue/check_briefing_for_arxiv.py\nfrom hermes_tools import read_file\n\ndef extract_urls_from_briefing(briefing_path):\n    \"\"\"Extract URLs from the briefing markdown file.\"\"\"\n    try:\n        with open(briefing_path, 'r', encoding='utf-8') as f:\n            content = f.read()\n        \n        # Find all markdown links: [text](url)\n        url_pattern = r'\\[([^\\]]*)\\]\\(([^)]+)\\)'\n        matches = re.findall(url_pattern, content)\n        \n        # Also find plain URLs\n        plain_url_pattern = r'https?://[^\s\\[\\]]+'\n        plain_matches = re.findall(plain_url_pattern, content)\n        \n        urls = []\n        # Add URLs from markdown links\n        for text, url in matches:\n            urls.append(url.strip())\n        # Add plain URLs\n        urls.extend([u.strip() for u in plain_matches])\n        \n        return list(set(urls))  # Remove duplicates\n    except Exception as e:\n        print(f\"Error reading briefing file: {e}\")\n        return []\n\n# Usage in the automation:\n# latest_briefing = max(briefing_files, key=lambda p: p.stat().st_mtime)\n# urls = extract_urls_from_briefing(latest_briefing)\n# publication_urls = [url for url in urls if is_arxiv_or_publication_url(url)]\n```\n\nThis automation runs daily via cron job (6:45 AM EDT) to check the AI briefing for Arxiv links that should be added to Zotero.
 
-## Related Tools
-
-- `read_file` - Reads file with line-number prefixes for display
-- `write_file` - Expects raw content without formatting
-- `patch` - Alternative for targeted file edits (uses fuzzy matching)
-- `execute_code` - For complex file processing logic
-
-## Error Prevention
+## Related Tools\n\n- `read_file` - Reads file with line-number prefixes for display\n- `write_file` - Expects raw content without formatting\n- `patch` - Alternative for targeted file edits (uses fuzzy matching)\n- `execute_code` - For complex file processing logic\n\n## Related References\n\n- `references/ai-briefing-session-fix.md` - Detailed walkthrough of fixing file-mutation verifier warnings in AI briefing automation\n- `references/hermes-automation-patterns.md` - Patterns for working with .env files, automation scripts, and verification in Hermes Agent\n\n## Error Prevention
 
 This pattern prevents:
 - File corruption from chat-display artifacts
