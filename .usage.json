@@ -108,13 +108,13 @@
     "created_at": "2026-06-30T17:05:55.349520+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-06-30T18:39:03.692842+00:00",
-    "last_used_at": "2026-06-30T18:38:54.200428+00:00",
-    "last_viewed_at": "2026-06-30T18:38:54.187016+00:00",
+    "last_used_at": "2026-06-30T19:00:30.902221+00:00",
+    "last_viewed_at": "2026-06-30T19:00:30.899041+00:00",
     "patch_count": 34,
     "pinned": false,
     "state": "active",
-    "use_count": 21,
-    "view_count": 21
+    "use_count": 22,
+    "view_count": 22
   },
   "plan": {
     "archived_at": null,
