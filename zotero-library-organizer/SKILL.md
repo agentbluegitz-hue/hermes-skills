@@ -197,18 +197,35 @@ When initial analysis suggests missing domains or when users suspect specific co
 - **Reference**: See `references/arxiv-paper-filing-lessons.md` for detailed workflow and implementation discovered during session with Matt
   2. Use direct API approach (requires credentials, works when desktop open)
   3. Use read-only copy of database
-  4. Schedule operations for when Zotero is not running
+  ## Key Lessons Learned
 
-### Lesson 9: Duplicate Merging Preserves Research Context
-- Duplicate items in Zotero libraries often contain complementary notes, tags, and metadata
-- Merging duplicates while combining notes preserves valuable research context
-- The merging process:
-  1. Identifies duplicates using multiple strategies (Arxiv ID, normalized title)
-  2. Selects the item with the richest note as the "keeper"
-  3. Combines notes from all duplicates with clear separators
-  4. Updates the keeper with the combined note
-  5. Safely deletes duplicate items
-- **Session Reference**: See `scripts/merge_zotero_duplicates.py` for the implementation that resolved duplicate management issues during the session with Matt
+  ### Lesson 9: Duplicate Merging Preserves Research Context
+  - Duplicate items in Zotero libraries often contain complementary notes, tags, and metadata
+  - Merging duplicates while combining notes preserves valuable research context
+  - The merging process:
+    1. Identifies duplicates using multiple strategies (Arxiv ID, normalized title)
+    2. Selects the item with the richest note as the "keeper"
+    3. Combines notes from all duplicates with clear separators
+    4. Updates the keeper with the combined note
+    5. Safely deletes duplicate items
+  - **Session Reference**: See `scripts/merge_zotero_duplicates.py` for the implementation that resolved duplicate management issues during the session with Matt
+
+  ### Lesson 10: RAG Systems Enable Semantic Library Search
+  - Traditional keyword search misses semantic relationships (e.g., "AI agent" vs "LLM assistant")
+  - Retrieval-Augmented Generation (RAG) transforms libraries into searchable knowledge bases
+  - **Implementation**: 
+    * Extract text from title+abstract+notes+tags for each item
+    * Create embeddings using sentence-transformers (all-MiniLM-L6-v2)
+    * Build FAISS index for millisecond-scale similarity search
+    * Query with semantic understanding rather than exact keyword matching
+  - **Benefits**: 
+    * Finds conceptually related items even with different terminology
+    * Provides relevance scoring (0-1) for result ranking
+    * Enables natural language questioning of your library
+    * Complements traditional organization with discovery capabilities
+  - **Session Reference**: See `references/rag-system-lessons.md` for detailed implementation and lessons learned from building a RAG system for Matt's Zotero library
+  - **Storage Efficient**: ~20-30 MB for a ~5,000 item library
+  - **Performance**: <1 second query times after index loading
 
 ### Issue: Poor Search Results
 - **Cause**: Overly broad or narrow search terms
@@ -301,3 +318,4 @@ Once organized, the library can power:
 6. **Optimized Processing**: Implement the batch processing strategies from `references/optimized-batch-processing-lessons.md` for all large-scale library operations
 7. **User Preference Integration**: Formalize the proactive-but-permission-based approach and regular progress reporting as core principles of the skill
 8. **Arxiv Integration**: Implement automated workflows to file new Arxiv papers from AI briefings into relevant Zotero collections (see `references/arxiv-paper-filing-lessons.md` as starting point)
+9. **RAG System Enhancement**: Develop the semantic search capabilities further with hybrid search, metadata enrichment, and incremental updates (see `references/rag-system-lessons.md` as foundation)
