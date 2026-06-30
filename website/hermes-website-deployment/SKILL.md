@@ -43,10 +43,19 @@ Deploy the built site to DreamHost using rsync over SSH.
 ```bash
 ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes -o PreferredAuthentications=publickey agent-blue.gitz.us true
 ```
-If this fails, check:
-- SSH key is correctly installed in `~/.ssh/id_ed25519`
-- The public key is in `~agent-blue/.ssh/authorized_keys` on the remote host
-- The SSH daemon is running on the remote host and accessible on port 22
+If this fails, diagnose based on the error message:
+
+- **Connection refused** (e.g., `ssh: connect to host agent-blue.gitz.us port 22: Connection refused`):
+  - SSH service is not running on remote host
+  - Firewall is blocking port 22
+  - Incorrect hostname or IP address
+  - Remote host not accessible
+  - Verify with: `ping agent-blue.gitz.us` and `nc -z agent-blue.gitz.us 22`
+
+- **Permission denied** (e.g., `Permission denied (publickey,password,keyboard-interactive)`):
+  - SSH key not properly installed or permissions incorrect
+  - Public key not in `~/.ssh/authorized_keys` on remote host
+  - SSH agent not running or key not loaded
 
 #### Deploy with rsync
 ```bash
