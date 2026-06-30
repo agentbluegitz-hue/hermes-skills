@@ -1,0 +1,33 @@
+# .gitignore for Hermes Skills Repository
+
+# Ignore local cache and temporary files
+.usage.json
+.usage.json.lock
+.bundled_manifest
+.curator_state
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore log files
+*.log
+
+# Ignore environment-specific files that might contain secrets
+.env
+.env.*
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*~
+
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore any local overrides or customizations that shouldn't be shared
+custom/
+overrides/
