@@ -7,15 +7,17 @@ category: creative
 # Zensical Website Building
 
 Build modern, responsive websites using the Zensical static site generator from the Material for MkDocs team.
-
 ## When to Use
 
 Use this skill when you need to:
+
 - Build a documentation or informational website
 - Create a site primarily from Markdown content
 - Want a professional-looking site with minimal configuration
 - Desire built-in features like search, dark/light mode, and responsive design
 - Plan to host the site statically (GitHub Pages, DreamHost, etc.)
+- Want to integrate AI-generated images into your site (via direct API or ComfyUI)
+- Want to integrate AI-generated images into your site (via direct API or ComfyUI)
 
 ## Steps
 
@@ -260,3 +262,4 @@ This skill includes the following support files:
 - `references/installation.md` - Detailed installation instructions and troubleshooting
 - `templates/deploy-script.sh` - Ready-to-use deployment script for Hermes Agent automation
 - `references/github-pages-image-paths.md` - Guide to fixing image path issues when deploying to GitHub Pages
+- `references/ai-image-generation.md` - Guide to integrating AI-generated images with Zensical sites
