@@ -235,6 +235,7 @@ See `templates/deploy-script.sh` for a complete deployment script designed for u
 - **Deployment Target**: Always deploy the contents of the `site/` directory, not your source files
 - **Git Metadata**: When deploying via rsync, consider excluding `.git/` if you don't want to deploy your Git history
 - **Theme Customization**: Some theme overrides require creating a `custom_dir` directory and understanding Zensical's templating system
+- **Path Resolution for GitHub Pages**: When deploying to GitHub Pages, use relative paths for assets (e.g., `assets/images/photo.png`) rather than absolute paths (`/assets/images/photo.png`). Absolute paths can break when the site is served from a subdirectory (like `username.github.io/repository/`). Zensical builds relative links correctly when configured properly, but manual HTML/Markdown overrides may need adjustment.
 
 ## Verification
 
@@ -258,3 +259,4 @@ After building, verify:
 This skill includes the following support files:
 - `references/installation.md` - Detailed installation instructions and troubleshooting
 - `templates/deploy-script.sh` - Ready-to-use deployment script for Hermes Agent automation
+- `references/github-pages-image-paths.md` - Guide to fixing image path issues when deploying to GitHub Pages

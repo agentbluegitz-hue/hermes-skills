@@ -69,13 +69,13 @@
     "created_at": "2026-06-27T23:12:12.965838+00:00",
     "created_by": null,
     "last_patched_at": null,
-    "last_used_at": "2026-06-30T16:54:32.469313+00:00",
-    "last_viewed_at": "2026-06-30T16:54:32.458973+00:00",
+    "last_used_at": "2026-06-30T17:39:59.204856+00:00",
+    "last_viewed_at": "2026-06-30T17:39:58.651275+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 9,
-    "view_count": 9
+    "use_count": 12,
+    "view_count": 12
   },
   "hermes-agent-skill-authoring": {
     "archived_at": null,
@@ -102,6 +102,19 @@
     "state": "active",
     "use_count": 9,
     "view_count": 9
+  },
+  "hermes-website-deployment": {
+    "archived_at": null,
+    "created_at": "2026-06-30T17:05:55.349520+00:00",
+    "created_by": "agent",
+    "last_patched_at": "2026-06-30T17:51:09.338043+00:00",
+    "last_used_at": "2026-06-30T17:50:23.863619+00:00",
+    "last_viewed_at": "2026-06-30T17:50:23.853303+00:00",
+    "patch_count": 22,
+    "pinned": false,
+    "state": "active",
+    "use_count": 14,
+    "view_count": 14
   },
   "plan": {
     "archived_at": null,
@@ -133,14 +146,14 @@
     "archived_at": null,
     "created_at": "2026-06-30T16:54:29.905892+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-06-30T16:57:01.997549+00:00",
-    "last_used_at": "2026-06-30T16:57:37.944468+00:00",
-    "last_viewed_at": "2026-06-30T16:57:37.924547+00:00",
-    "patch_count": 7,
+    "last_patched_at": "2026-06-30T17:50:37.408418+00:00",
+    "last_used_at": "2026-06-30T17:50:33.671140+00:00",
+    "last_viewed_at": "2026-06-30T17:50:33.318668+00:00",
+    "patch_count": 11,
     "pinned": false,
     "state": "active",
-    "use_count": 1,
-    "view_count": 1
+    "use_count": 7,
+    "view_count": 7
   },
   "zotero-integration": {
     "archived_at": null,
