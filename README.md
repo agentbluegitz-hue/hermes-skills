@@ -24,6 +24,8 @@ Each skill is organized in its own directory under the respective category:
 ├── research/                 # Academic research tools
 ├── smart-home/               # Smart home device control
 ├── social-media/             # Social media platforms
+│   ├── hermes-tweet/          # X/Twitter research, drafting, and gated posting
+│   └── xurl/                  # X/Twitter via xurl CLI
 └── software-development/     # Software development practices
 ```
 
