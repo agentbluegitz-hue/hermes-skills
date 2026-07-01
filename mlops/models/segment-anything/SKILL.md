@@ -4,12 +4,11 @@ description: "SAM: zero-shot image segmentation via points, boxes, masks."
 version: 1.0.0
 author: Orchestra Research
 license: MIT
-dependencies: [segment-anything, transformers>=4.30.0, torch>=1.7.0]
+dependencies: [segment-anything, "transformers>=4.30.0", "torch>=1.7.0"]
 platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [Multimodal, Image Segmentation, Computer Vision, SAM, Zero-Shot]
-
 ---
 
 # Segment Anything Model (SAM)
@@ -24,21 +23,21 @@ Comprehensive guide to using Meta AI's Segment Anything Model for zero-shot imag
 - Generating training data for other vision models
 - Need zero-shot transfer to new image domains
 - Building object detection/segmentation pipelines
-- Processing medical, satellite, or domain-specific images
+- Processing medical, satellite, or domain‑specific images
 
 **Key features:**
-- **Zero-shot segmentation**: Works on any image domain without fine-tuning
+- **Zero-shot segmentation**: Works on any image domain without fine‑tuning
 - **Flexible prompts**: Points, bounding boxes, or previous masks
 - **Automatic segmentation**: Generate all object masks automatically
-- **High quality**: Trained on 1.1 billion masks from 11 million images
-- **Multiple model sizes**: ViT-B (fastest), ViT-L, ViT-H (most accurate)
+- **High quality**: Trained on 1.1 billion masks from 11 million images
+- **Multiple model sizes**: ViT‑B (fastest), ViT‑L, ViT‑H (most accurate)
 - **ONNX export**: Deploy in browsers and edge devices
 
 **Use alternatives instead:**
-- **YOLO/Detectron2**: For real-time object detection with classes
-- **Mask2Former**: For semantic/panoptic segmentation with categories
-- **GroundingDINO + SAM**: For text-prompted segmentation
-- **SAM 2**: For video segmentation tasks
+- **YOLO/Detectron2** – real‑time object detection with classes  
+- **Mask2Former** – semantic/panoptic segmentation with categories  
+- **GroundingDINO + SAM** – text‑prompted segmentation  
+- **SAM 2** – video segmentation tasks  
 
 ## Quick start
 
@@ -58,19 +57,20 @@ pip install transformers
 ### Download checkpoints
 
 ```bash
-# ViT-H (largest, most accurate) - 2.4GB
+# ViT‑H (largest, most accurate) – 2.4 GB
 wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
 
-# ViT-L (medium) - 1.2GB
+# ViT‑L (medium) – 1.2 GB
 wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_l_0b3195.pth
 
-# ViT-B (smallest, fastest) - 375MB
+# ViT‑B (smallest, fastest) – 375 MB
 wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
 ```
 
-### Basic usage with SamPredictor
+### Basic usage with `SamPredictor`
 
 ```python
+import cv2
 import numpy as np
 from segment_anything import sam_model_registry, SamPredictor
 
@@ -87,13 +87,13 @@ image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 predictor.set_image(image)
 
 # Predict with point prompts
-input_point = np.array([[500, 375]])  # (x, y) coordinates
-input_label = np.array([1])  # 1 = foreground, 0 = background
+input_point = np.array([[500, 375]])          # (x, y) coordinates
+input_label = np.array([1])                  # 1 = foreground, 0 = background
 
 masks, scores, logits = predictor.predict(
     point_coords=input_point,
     point_labels=input_label,
-    multimask_output=True  # Returns 3 mask options
+    multimask_output=True                     # Returns 3 mask options
 )
 
 # Select best mask
@@ -114,7 +114,7 @@ model.to("cuda")
 
 # Process image with point prompt
 image = Image.open("image.jpg")
-input_points = [[[450, 600]]]  # Batch of points
+input_points = [[[450, 600]]]                # Batch of points
 
 inputs = processor(image, input_points=input_points, return_tensors="pt")
 inputs = {k: v.to("cuda") for k, v in inputs.items()}
@@ -123,7 +123,7 @@ inputs = {k: v.to("cuda") for k, v in inputs.items()}
 with torch.no_grad():
     outputs = model(**inputs)
 
-# Post-process masks to original size
+# Post‑process masks to original size
 masks = processor.image_processor.post_process_masks(
     outputs.pred_masks.cpu(),
     inputs["original_sizes"].cpu(),
@@ -150,20 +150,20 @@ SAM Architecture:
 
 ### Model variants
 
-| Model | Checkpoint | Size | Speed | Accuracy |
-|-------|------------|------|-------|----------|
-| ViT-H | `vit_h` | 2.4 GB | Slowest | Best |
-| ViT-L | `vit_l` | 1.2 GB | Medium | Good |
-| ViT-B | `vit_b` | 375 MB | Fastest | Good |
+| Model | Checkpoint | Size   | Speed   | Accuracy |
+|-------|------------|--------|---------|----------|
+| ViT‑H | `vit_h`    | 2.4 GB | Slowest | Best     |
+| ViT‑L | `vit_l`    | 1.2 GB | Medium  | Good     |
+| ViT‑B | `vit_b`    | 375 MB | Fastest | Good     |
 
 ### Prompt types
 
-| Prompt | Description | Use Case |
-|--------|-------------|----------|
-| Point (foreground) | Click on object | Single object selection |
-| Point (background) | Click outside object | Exclude regions |
-| Bounding box | Rectangle around object | Larger objects |
-| Previous mask | Low-res mask input | Iterative refinement |
+| Prompt          | Description                | Use Case                |
+|-----------------|----------------------------|------------------------|
+| Point (fg)      | Click on object            | Single object selection |
+| Point (bg)      | Click outside object       | Exclude regions         |
+| Bounding box    | Rectangle around object    | Larger objects          |
+| Previous mask   | Low‑res mask input         | Iterative refinement    |
 
 ## Interactive segmentation
 
@@ -228,7 +228,7 @@ masks, scores, logits = predictor.predict(
 # Refine with additional point using previous mask
 masks, scores, logits = predictor.predict(
     point_coords=np.array([[500, 375], [550, 400]]),
-    point_labels=np.array([1, 0]),  # Add background point
+    point_labels=np.array([1, 0]),               # Add background point
     mask_input=logits[np.argmax(scores)][None, :, :],  # Use best mask
     multimask_output=False
 )
@@ -261,12 +261,12 @@ masks = mask_generator.generate(image)
 ```python
 mask_generator = SamAutomaticMaskGenerator(
     model=sam,
-    points_per_side=32,          # Grid density (more = more masks)
-    pred_iou_thresh=0.88,        # Quality threshold
-    stability_score_thresh=0.95,  # Stability threshold
-    crop_n_layers=1,             # Multi-scale crops
+    points_per_side=32,               # Grid density (more = more masks)
+    pred_iou_thresh=0.88,             # Quality threshold
+    stability_score_thresh=0.95,      # Stability threshold
+    crop_n_layers=1,                  # Multi‑scale crops
     crop_n_points_downscale_factor=2,
-    min_mask_region_area=100,    # Remove tiny masks
+    min_mask_region_area=100,         # Remove tiny masks
 )
 
 masks = mask_generator.generate(image)
@@ -290,12 +290,15 @@ stable_masks = [m for m in masks if m['stability_score'] > 0.95]
 ### Multiple images
 
 ```python
+import cv2
+import numpy as np
+
 # Process multiple images efficiently
 images = [cv2.imread(f"image_{i}.jpg") for i in range(10)]
 
 all_masks = []
-for image in images:
-    predictor.set_image(image)
+for img in images:
+    predictor.set_image(img)
     masks, _, _ = predictor.predict(
         point_coords=np.array([[500, 375]]),
         point_labels=np.array([1]),
@@ -318,9 +321,9 @@ points = [
 ]
 
 all_masks = []
-for point in points:
+for pt in points:
     masks, scores, _ = predictor.predict(
-        point_coords=point,
+        point_coords=pt,
         point_labels=np.array([1]),
         multimask_output=True
     )
@@ -343,6 +346,7 @@ python scripts/export_onnx_model.py \
 
 ```python
 import onnxruntime
+import numpy as np
 
 # Load ONNX model
 ort_session = onnxruntime.InferenceSession("sam_onnx.onnx")
@@ -363,10 +367,11 @@ masks = ort_session.run(
 
 ## Common workflows
 
-### Workflow 1: Annotation tool
+### Workflow 1: Annotation tool
 
 ```python
 import cv2
+import numpy as np
 
 # Load model
 predictor = SamPredictor(sam)
@@ -382,13 +387,16 @@ def on_click(event, x, y, flags, param):
         )
         # Display best mask
         display_mask(masks[np.argmax(scores)])
+
+cv2.namedWindow("Annotate")
+cv2.setMouseCallback("Annotate", on_click)
 ```
 
-### Workflow 2: Object extraction
+### Workflow 2: Object extraction
 
 ```python
 def extract_object(image, point):
-    """Extract object at point with transparent background."""
+    """Extract object at `point` with a transparent background."""
     predictor.set_image(image)
 
     masks, scores, _ = predictor.predict(
@@ -407,10 +415,12 @@ def extract_object(image, point):
     return rgba
 ```
 
-### Workflow 3: Medical image segmentation
+### Workflow 3: Medical image segmentation
 
 ```python
-# Process medical images (grayscale to RGB)
+import cv2
+
+# Process medical images (grayscale → RGB)
 medical_image = cv2.imread("scan.png", cv2.IMREAD_GRAYSCALE)
 rgb_image = cv2.cvtColor(medical_image, cv2.COLOR_GRAY2RGB)
 
@@ -418,7 +428,7 @@ predictor.set_image(rgb_image)
 
 # Segment region of interest
 masks, scores, _ = predictor.predict(
-    box=np.array([x1, y1, x2, y2]),  # ROI bounding box
+    box=np.array([x1, y1, x2, y2]),   # ROI bounding box
     multimask_output=True
 )
 ```
@@ -433,8 +443,8 @@ masks, scores, _ = predictor.predict(
     "segmentation": np.ndarray,  # H×W binary mask
     "bbox": [x, y, w, h],        # Bounding box
     "area": int,                 # Pixel count
-    "predicted_iou": float,      # 0-1 quality score
-    "stability_score": float,    # 0-1 robustness score
+    "predicted_iou": float,      # 0‑1 quality score
+    "stability_score": float,    # 0‑1 robustness score
     "crop_box": [x, y, w, h],    # Generation crop region
     "point_coords": [[x, y]],    # Input point
 }
@@ -465,42 +475,4 @@ sam = sam_model_registry["vit_b"](checkpoint="sam_vit_b_01ec64.pth")
 # Clear CUDA cache between large batches
 torch.cuda.empty_cache()
 ```
-
-### Speed optimization
-
-```python
-# Use half precision
-sam = sam.half()
-
-# Reduce points for automatic generation
-mask_generator = SamAutomaticMaskGenerator(
-    model=sam,
-    points_per_side=16,  # Default is 32
-)
-
-# Use ONNX for deployment
-# Export with --return-single-mask for faster inference
-```
-
-## Common issues
-
-| Issue | Solution |
-|-------|----------|
-| Out of memory | Use ViT-B model, reduce image size |
-| Slow inference | Use ViT-B, reduce points_per_side |
-| Poor mask quality | Try different prompts, use box + points |
-| Edge artifacts | Use stability_score filtering |
-| Small objects missed | Increase points_per_side |
-
-## References
-
-- **[Advanced Usage](references/advanced-usage.md)** - Batching, fine-tuning, integration
-- **[Troubleshooting](references/troubleshooting.md)** - Common issues and solutions
-
-## Resources
-
-- **GitHub**: https://github.com/facebookresearch/segment-anything
-- **Paper**: https://arxiv.org/abs/2304.02643
-- **Demo**: https://segment-anything.com
-- **SAM 2 (Video)**: https://github.com/facebookresearch/segment-anything-2
-- **HuggingFace**: https://huggingface.co/facebook/sam-vit-huge
+---
