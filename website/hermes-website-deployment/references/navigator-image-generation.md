@@ -5,9 +5,10 @@ This document describes the workflow for generating custom images using the Navi
 ## Overview
 The NaviGator API provides access to Flux and Gemini image generation models. This workflow outlines how to:
 1. Extract the API key from Hermes configuration
-2. Generate images using the Flux.1-dev model
-3. Scale images appropriately for web use
-4. Integrate generated images into the Zensical-based website
+2. Generate images using Flux models (flux.1-schnell for quick tests, flux.1-dev for higher quality)
+3. Use response_format: b64_json to avoid URL resolution issues with 0.0.0.0:5500 addresses
+4. Scale images appropriately for web use using FFmpeg
+5. Integrate generated images into the Zensical-based website
 
 ## Prerequisites
 - Access to Hermes Agent configuration at `~/.hermes/config.yaml`
@@ -20,15 +21,18 @@ The NaviGator API provides access to Flux and Gemini image generation models. Th
 ### 1. Extract API Key
 ```bash
 # Extract the NaviGator API key from Hermes config
+# Method 1: Using grep (simple)
 NAV_KEY=$(grep "api_key:" ~/.hermes/config.yaml | head -1 | cut -d':' -f2 | tr -d ' ')
-echo "API Key extracted: ${NAV_KEY:0:10}..."
+# Method 2: More precise extraction (if needed)
+# NAV_KEY=$(grep -A2 "name: NaviGator" ~/.hermes/config.yaml | grep "api_key:" | cut -d':' -f2 | tr -d ' ')
+echo "API Key extracted: ${NAV_KEY:0:10}... (length: ${#NAV_KEY})"
 ```
 
 ### 2. Test API Connectivity
 ```bash
-# Test connection with a simple request
+# Test connection with a simple request using flux.1-schnell for quick testing
 curl -s -H "Authorization: Bearer $NAV_KEY" -H "Content-Type: application/json" \
-  -d '{"model": "flux.1-dev", "prompt": "test", "n": 1, "size": "256x256", "response_format": "b64_json"}' \
+  -d '{"model": "flux.1-schnell", "prompt": "test", "n": 1, "size": "256x256", "response_format": "b64_json"}' \
   https://api.ai.it.ufl.edu/v1/images/generations | \
   jq -r '.data[0].b64_json' | base64 -d > /tmp/test.png && \
 echo "Test successful: $(ls -lh /tmp/test.png | awk '{print $5}')"
@@ -36,7 +40,7 @@ echo "Test successful: $(ls -lh /tmp/test.png | awk '{print $5}')"
 
 ### 3. Generate Hermes Agent Logo
 ```bash
-# Generate the logo image
+# Generate the logo image using flux.1-dev for higher quality
 curl -s -H "Authorization: Bearer $NAV_KEY" -H "Content-Type: application/json" \
   -d '{
     "model": "flux.1-dev",
@@ -47,8 +51,8 @@ curl -s -H "Authorization: Bearer $NAV_KEY" -H "Content-Type: application/json" 
   }' \
   https://api.ai.it.ufl.edu/v1/images/generations | \
   jq -r '.data[0].b64_json' | base64 -d > /home/agent-blue/.hermes/website/generated-images/herm_agent_logo.png
-
 echo "Logo generated: $(ls -lh /home/agent-blue/.hermes/website/generated-images/herm_agent_logo.png | awk '{print $5}')"
+```
 ```
 
 ### 4. Scale Image for Web Use
@@ -57,8 +61,56 @@ echo "Logo generated: $(ls -lh /home/agent-blue/.hermes/website/generated-images
 ffmpeg -y -i /home/agent-blue/.hermes/website/generated-images/herm_agent_logo.png \
   -vf "scale=iw*0.5:ih*0.5" -vframes 1 \
   /home/agent-blue/.hermes/website/generated-images/herm_agent_logo_scaled.png
-
 echo "Logo scaled: $(ls -lh /home/agent-blue/.hermes/website/generated-images/herm_agent_logo_scaled.png | awk '{print $5}')"
+```
+
+### 5. Handle API Response URLs
+```bash
+# After generating an image, the API may return URLs pointing to 0.0.0.0:5500
+# These need to be adjusted to point to the actual API host
+RESPONSE=$(curl -s -H "Authorization: Bearer *** -H "Content-Type: application/json" \
+  -d '{"model":"flux.1-schnell","prompt":"A simple modern logo for an AI assistant named Hermes Agent, with wings and a stylized H","n":1,"size":"512x512"}' \
+  https://api.ai.it.ufl.edu/v1/images/generations)
+
+# Extract the image URL
+IMAGE_URL=$(echo "$RESPONSE" | grep -o '"url":"[^"]*' | cut -d'"' -f4)
+echo "Original URL: $IMAGE_URL"
+
+# Adjust URL: replace 0.0.0.0:5500 with api.ai.it.ufl.edu and ensure https
+if [[ "$IMAGE_URL" == *"0.0.0.0:5500"* ]]; then
+  IMAGE_URL=$(echo "$IMAGE_URL" | sed 's|http://0.0.0.0:5500|https://api.ai.it.ufl.edu|')
+  echo "Adjusted URL: $IMAGE_URL"
+fi
+
+# Download the image with authentication
+curl -s -o /tmp/hermes_logo.png -H "Authorization: Bearer *** "$IMAGE_URL"
+echo "Download completed. File info:"
+file /tmp/hermes_logo.png
+```
+
+### 6. Generate Site Banner
+```bash
+# After generating an image, the API may return URLs pointing to 0.0.0.0:5500
+# These need to be adjusted to point to the actual API host
+RESPONSE=$(curl -s -H "Authorization: Bearer *** -H "Content-Type: application/json" \
+  -d '{"model":"flux.1-schnell","prompt":"A simple modern logo for an AI assistant named Hermes Agent, with wings and a stylized H","n":1,"size":"512x512"}' \
+  https://api.ai.it.ufl.edu/v1/images/generations)
+
+# Extract the image URL
+IMAGE_URL=$(echo "$RESPONSE" | grep -o '"url":"[^"]*' | cut -d'"' -f4)
+echo "Original URL: $IMAGE_URL"
+
+# Adjust URL: replace 0.0.0.0:5500 with api.ai.it.ufl.edu and ensure https
+if [[ "$IMAGE_URL" == *"0.0.0.0:5500"* ]]; then
+  IMAGE_URL=$(echo "$IMAGE_URL" | sed 's|http://0.0.0.0:5500|https://api.ai.it.ufl.edu|')
+  echo "Adjusted URL: $IMAGE_URL"
+fi
+
+# Download the image with authentication
+curl -s -o /tmp/hermes_logo.png -H "Authorization: Bearer *** "$IMAGE_URL"
+echo "Download completed. File info:"
+file /tmp/hermes_logo.png
+```
 ```
 
 ### 5. Generate Site Banner
