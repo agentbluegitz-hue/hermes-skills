@@ -18,9 +18,17 @@ This skill provides methodologies for analyzing personal Zotero libraries to dis
 
 Personal research libraries (like Zotero) often accumulate thousands of items over time, with significant portions remaining unfiled or poorly organized. This creates inefficiencies in research workflows where users cannot easily discover relevant materials for new projects, literature reviews, or training material development.
 
-The Zotero Library Organizer skill helps users:\n- Discover hidden topical structure in their libraries\n- Identify significant research domains they may have forgotten about\n- Automatically organize unfiled items into meaningful collections\n- Create a browsable knowledge base that enhances research productivity\n- Prepare libraries for use with AI research assistants\n- **Stay current with research**: Automatically process AI news briefings to file relevant Arxiv papers (see Lesson 8)\n\n## Core Workflow
+The Zotero Library Organizer skill helps users:
+- Discover hidden topical structure in their libraries  
+- Identify significant research domains they may have forgotten about  
+- Automatically organize unfiled items into meaningful collections  
+- Create a browsable knowledge base that enhances research productivity  
+- Prepare libraries for use with AI research assistants  
+- **Stay current with research**: Automatically process AI news briefings to file relevant Arxiv papers (see Lesson 8)
 
-### Phase 1: Library Assessment
+## Core Workflow
+
+### Phase 1: Library Assessment
 ```markdown
 ## Library Assessment Process
 
@@ -31,7 +39,7 @@ The Zotero Library Organizer skill helps users:\n- Discover hidden topical struc
 
 2. **Sampling Strategy**
    - Determine appropriate sample size for initial analysis
-   - Consider library size when choosing sample (e.g., 100-500 items for libraries >1000 items)
+   - Consider library size when choosing sample (e.g., 100‑500 items for libraries >1000 items)
    - Ensure sample includes various item types (journal articles, attachments, notes, etc.)
 
 3. **Initial Content Analysis**
@@ -41,7 +49,7 @@ The Zotero Library Organizer skill helps users:\n- Discover hidden topical struc
    - Note format distribution (what percentage are substantive vs. annotations/attachments)
 ```
 
-### Phase 2: Targeted Domain Discovery
+### Phase 2: Targeted Domain Discovery
 ```markdown
 ## Targeted Domain Discovery
 
@@ -52,13 +60,13 @@ When initial analysis suggests missing domains or when users suspect specific co
    - Based on collection names that suggest domains
    - Based on known research interests
 
-2. **Domain-Specific Search Terms**
-   - Create targeted search queries for suspected domains
+2. **Domain‑Specific Search Terms**
+   - Create targeted search queries for suspected domains  
    - Examples:
-     * Plant biology: ['plant phylogeny', 'evolution', 'botany', 'clade', 'polyploidy']
-     * Machine learning: ['neural network', 'deep learning', 'transformer', 'CNN', 'RNN']
-     * Medical imaging: ['radiology', 'MRI', 'CT scan', 'diagnosis', 'pathology']
-     * Education: ['pedagogy', 'curriculum', 'assessment', 'learning outcomes']
+     * Plant biology: `['plant phylogeny', 'evolution', 'botany', 'clade', 'polyploidy']`
+     * Machine learning: `['neural network', 'deep learning', 'transformer', 'CNN', 'RNN']`
+     * Medical imaging: `['radiology', 'MRI', 'CT scan', 'diagnosis', 'pathology']`
+     * Education: `['pedagogy', 'curriculum', 'assessment', 'learning outcomes']`
 
 3. **Broad Search Execution**
    - Execute searches for each term
@@ -72,7 +80,7 @@ When initial analysis suggests missing domains or when users suspect specific co
    - Check for false positives and refine search terms
 ```
 
-### Phase 3: Organization Planning
+### Phase 3: Organization Planning
 ```markdown
 ## Organization Planning Process
 
@@ -83,21 +91,21 @@ When initial analysis suggests missing domains or when users suspect specific co
    - Consider hierarchical organization (broad topics with subcollections)
 
 2. **Item Assignment Strategy**
-   - Develop rules for assigning items to topics
+   - Develop rules for assigning items to topics  
    - Options:
      * Keyword matching (title, abstract, tags)
-     * Machine learning classification (if sufficient training data)
-     * Hybrid approach (keywords + ML)
+     * Machine‑learning classification (if sufficient training data)
+     * Hybrid approach (keywords + ML)
      * Manual review for borderline cases
 
 3. **Collection Planning**
    - Decide which existing collections to keep, rename, or merge
    - Plan new collections to create
    - Estimate item distribution across collections
-   - Identify items that may fit multiple collections (needing tie-breaker rules)
+   - Identify items that may fit multiple collections (needing tie‑breaker rules)
 ```
 
-### Phase 4: Implementation & Verification
+### Phase 4: Implementation & Verification
 ```markdown
 ## Implementation Process
 
@@ -121,7 +129,7 @@ When initial analysis suggests missing domains or when users suspect specific co
    - Maintain detailed logs for potential rollback
 
 4. **Verification & Reporting**
-   - Post-implementation audit
+   - Post‑implementation audit
    - Before/after statistics
    - Sample of newly organized library
    - Suggestions for next steps (further refinement, subcollection creation)
@@ -129,166 +137,182 @@ When initial analysis suggests missing domains or when users suspect specific co
 
 ## Key Lessons Learned
 
-## Key Lessons Learned
+### Lesson 1: Small Samples Can Miss Significant Content
+- Initial topic modeling from small samples (e.g., 100 items) may miss domain‑specific content.  
+- Specialized terminology may not surface in top keyword lists from limited samples.  
+- Always validate with targeted searches for suspected domains.  
+- **Session Reference**: `references/zotero-api-authentication-lessons.md` – authentication workflow and MCP server troubleshooting.  
+- **Session Reference**: `references/optimized-batch-processing-lessons.md` – eliminating script timeouts through optimized batch processing.
 
-### Lesson 1: Small Samples Can Miss Significant Content
-- Initial topic modeling from small samples (e.g., 100 items) may miss domain-specific content
-- Specialized terminology may not surface in top keyword lists from limited samples
-- Always validate with targeted searches for suspected domains
-- **Session Reference**: See `references/zotero-api-authentication-lessons.md` for detailed authentication workflow and MCP server troubleshooting discovered during session with Matt
-- **Session Reference**: See `references/optimized-batch-processing-lessons.md` for lessons learned about eliminating script timeouts through optimized batch processing strategies
+### Lesson 2: Format Matters for Content Discovery
+- Attachments often have generic titles (“Full Text PDF”, “Snapshot”).  
+- Annotations frequently lack meaningful titles.  
+- Substantive content (journal articles, books, preprints) is more discoverable via title/abstract analysis.  
+- Different strategies are needed for different item types.
 
-### Lesson 2: Format Matters for Content Discovery
-- Attachments often have generic titles ("Full Text PDF", "Snapshot")
-- Annotations frequently lack meaningful titles
-- Substantive content (journal articles, books, preprints) is more discoverable via title/abstract analysis
-- Different strategies needed for different item types
+### Lesson 3: Iterative Refinement Beats One‑Shot Analysis
+- Start broad, then refine based on results.  
+- Use deduplication across multiple search terms.  
+- Check actual content, not just metadata.  
+- Verify with collection membership when possible.
 
-### Lesson 3: Iterative Refinement Beats One-Shot Analysis
-- Start broad, then refine based on results
-- Use deduplication across multiple search terms
-- Check actual content, not just metadata
-- Verify with collection membership when possible
+### Lesson 4: User Domain Knowledge Is Essential
+- Users know their research interests better than any algorithm.  
+- Incorporate user feedback at every stage.  
+- Allow users to override algorithmic suggestions.  
+- Use user collections as ground truth for validation.
 
-### Lesson 4: User Domain Knowledge is Essential
-- Users know their research interests better than any algorithm
-- Incorporate user feedback at every stage
-- Allow users to override algorithmic suggestions
-- Use user collections as ground truth for validation
+### Lesson 5: Enhanced Classification Improves Domain Discovery
+- Generic keyword lists may miss specialized domain content.  
+- Adding domain‑specific terminology (e.g., plant biology terms like “clade”, “polyploidy”, “phylogenetic”) significantly improves classification accuracy.  
+- Test classification on sample items before full deployment.  
+- **Iterative Enhancement**: Start with broad classification, then refine with domain‑specific terms when initial results suggest missing content.
 
-### Lesson 5: Enhanced Classification Improves Domain Discovery
-- Generic keyword lists may miss specialized domain content
-- Adding domain-specific terminology (e.g., plant biology terms like "clade", "polyploidy", "phylogenetic") significantly improves classification accuracy
-- Consider creating enhanced keyword lists for known research domains
-- Test classification on sample items before full deployment
-- **Iterative Enhancement**: Start with broad classification, then refine with domain-specific terms when initial results suggest missing content (as discovered when plant biology content was missed in initial sampling but found via targeted search)
+### Lesson 6: Batch Processing Enables Efficient Library Organization
+- Processing large libraries in batches prevents API overload and allows progress tracking.  
+- Skip non‑substantive items (annotations, attachments) during initial organization passes for efficiency.  
+- Tag preprint items during processing to mark them for easy identification.  
+- Handle version conflicts gracefully by retrieving fresh item data when needed.  
+- Maintain detailed logs for verification and potential rollback.  
+- **Enhanced Technique**: Use small batch sizes (10‑20 items) with strategic delays (1‑2 seconds) to prevent API timeouts (see `references/optimized-batch-processing-lessons.md`).
 
-### Lesson 6: Batch Processing Enables Efficient Library Organization
-- Processing large libraries in batches prevents API overload and allows progress tracking
-- Skip non-substantive items (annotations, attachments) during initial organization passes for efficiency
-- Tag preprint items during processing to mark them for easy identification
-- Handle version conflicts gracefully by retrieving fresh item data when needed
-- Maintain detailed logs for verification and potential rollback
-- **Enhanced Technique**: Use small batch sizes (10-20 items) with strategic delays (1-2 seconds) to prevent API timeouts, as detailed in `references/optimized-batch-processing-lessons.md`
+### Lesson 7: Correct API Usage for Collection Operations
+- The `zot.addto_collection()` method requires the full item dictionary (as returned by `zot.item()` or `zot.items()`), not just the item key.
 
-### Lesson 7: Correct API Usage for Collection Operations
-- The `zot.addto_collection()` method requires the full item dictionary (as returned by `zot.item()` or `zot.items()`), not just the item key
-## Key Lessons Learned
+### Lesson 8: Automated Arxiv Paper Filing from AI Briefings
+- AI news briefings often contain links to recent Arxiv papers relevant to specific domains.  
+- Implement automated detection of Arxiv links in briefing content and file these papers directly into Zotero with appropriate tags.  
 
-## Key Lessons Learned
+**Standard Workflow**
+1. Generate daily AI briefing with Arxiv paper detection.  
+2. Extract Arxiv IDs/URLs from the briefing.  
+3. For each paper: retrieve metadata, prepare a Zotero item, and file it with relevant tags.  
+4. Avoid duplicates by checking existing items.  
+5. Use small batches and appropriate delays to prevent API overload.
 
-### Lesson 8: Automated Arxiv Paper Filing from AI Briefings\\n- AI news briefings often contain links to recent Arxiv papers relevant to specific domains\\n- Implement automated detection of Arxiv links in briefing content\\n- File these papers directly into Zotero with appropriate tags\\n- **Standard Workflow**: \\n  1. Generate daily AI briefing with Arxiv paper detection\\n  2. Extract Arxiv IDs/URLs from briefing\\n  3. For each paper: get metadata, prepare Zotero item, file with relevant tags\\n  4. Avoid duplicates by checking existing items\\n  5. Use small batches and appropriate delays to prevent API overload\\n- **Cron-Specific Implementation** (as refined in session 2026-07-01):\\n  1. Find most recent briefing: `ls -t /tmp/ai_briefing_*.md 2>/dev/null | head -1` (fallback to home directory)\\n  2. Extract HTTP/HTTPS URLs: `grep -oE 'https?://[^[:space:]]+' "$latest"`\\n  3. Extract DOIs and convert to URLs: `grep -oE '10\\\\.[0-9]{4,9}/[-._;()/:A-Z0-9]+' "$latest" -i` then prefix with `https://doi.org/`\\n  4. Filter for target domains: `grep -E '(arxiv\\\\.org|biorxiv\\\\.org|medrxiv\\\\.org|ssrn\\\\.com|^https://doi\\\\.org/)'`\\n  5. Deduplicate and save: `sort -u > /home/agent-blue/.hermes/arxiv_to_check.txt`\\n  6. Execute filing script: `python3 /home/agent-blue/.hermes/skills/zotero-library-organizer/scripts/file_missing_arxiv.py`\\n- **Key Fixes Learned**:\\n  - Removed dependency on `hermes_tools` by using direct file I/O for better reliability in cron environments\\n  - Fixed Arxiv ID extraction regex pattern to properly handle version numbers\\n  - Used virtual environments for dependency installation when system-wide installation is blocked\\n  - Corrected file path handling in cron environments (avoiding concatenation errors with `find` output)\\n- **Reference**: See `references/arxiv-paper-filing-lessons.md` for detailed workflow and implementation discovered during session with Matt
-  2. Use direct API approach (requires credentials, works when desktop open)
-  3. Use read-only copy of database
-  ## Key Lessons Learned
+**Cron‑Specific Implementation (refined 2026‑07‑01)**
+1. Find the most recent briefing:  
+   ```bash
+   latest=$(ls -t /tmp/ai_briefing_*.md 2>/dev/null | head -1 || echo "$HOME/ai_briefing_latest.md")
+   ```  
+2. Extract URLs:  
+   ```bash
+   grep -oE 'https?://[^[:space:]]+' "$latest" > /home/agent-blue/.hermes/arxiv_urls.txt
+   ```  
+3. Extract DOIs and convert to URLs:  
+   ```bash
+   grep -oE '10\.[0-9]{4,9}/[-._;()/:A-Z0-9]+' "$latest" -i | \
+   sed 's/^/https:\/\/doi.org\//' >> /home/agent-blue/.hermes/arxiv_urls.txt
+   ```  
+4. Keep only target domains:  
+   ```bash
+   grep -E '(arxiv\.org|biorxiv\.org|medrxiv\.org|ssrn\.com|^https://doi\.org/)' \
+   /home/agent-blue/.hermes/arxiv_urls.txt | sort -u > /home/agent-blue/.hermes/arxiv_to_check.txt
+   ```  
+5. Execute filing script:  
+   ```bash
+   python3 /home/agent-blue/.hermes/skills/zotero-library-organizer/scripts/file_missing_arxiv.py
+   ```  
 
-  ### Lesson 9: Duplicate Merging Preserves Research Context
-  - Duplicate items in Zotero libraries often contain complementary notes, tags, and metadata
-  - Merging duplicates while combining notes preserves valuable research context
-  - The merging process:
-    1. Identifies duplicates using multiple strategies (Arxiv ID, normalized title)
-    2. Selects the item with the richest note as the "keeper"
-    3. Combines notes from all duplicates with clear separators
-    4. Updates the keeper with the combined note
-    5. Safely deletes duplicate items
-  - **Session Reference**: See `scripts/merge_zotero_duplicates.py` for the implementation that resolved duplicate management issues during the session with Matt
+**Key Fixes Learned**
+- Removed dependency on `hermes_tools` by using direct file I/O for better reliability in cron environments.  
+- Fixed Arxiv ID extraction regex to handle version numbers (e.g., `v2`).  
+- Utilized virtual environments for dependency installation when system‑wide installation is blocked.  
+- Corrected file‑path handling in cron environments (avoiding concatenation errors with `find` output).
 
-  ### Lesson 10: RAG Systems Enable Semantic Library Search
-  - Traditional keyword search misses semantic relationships (e.g., "AI agent" vs "LLM assistant")
-  - Retrieval-Augmented Generation (RAG) transforms libraries into searchable knowledge bases
-  - **Implementation**: 
-    * Extract text from title+abstract+notes+tags for each item
-    * Create embeddings using sentence-transformers (all-MiniLM-L6-v2)
-    * Build FAISS index for millisecond-scale similarity search
-    * Query with semantic understanding rather than exact keyword matching
-  - **Benefits**: 
-    * Finds conceptually related items even with different terminology
-    * Provides relevance scoring (0-1) for result ranking
-    * Enables natural language questioning of your library
-    * Complements traditional organization with discovery capabilities
-  - **Session Reference**: See `references/rag-system-lessons.md` for detailed implementation and lessons learned from building a RAG system for Matt's Zotero library
-  - **Storage Efficient**: ~20-30 MB for a ~5,000 item library
-  - **Performance**: <1 second query times after index loading
+### Lesson 9: Duplicate Merging Preserves Research Context
+- Duplicate items often contain complementary notes, tags, and metadata.  
+- Merging duplicates while combining notes preserves valuable research context.  
+- **Merging Process**
+  1. Identify duplicates using multiple strategies (Arxiv ID, normalized title).  
+  2. Select the item with the richest note as the “keeper”.  
+  3. Combine notes from all duplicates with clear separators.  
+  4. Update the keeper with the combined note.  
+  5. Safely delete duplicate items.  
+- **Session Reference**: `scripts/merge_zotero_duplicates.py`.
 
-### Issue: Poor Search Results
-- **Cause**: Overly broad or narrow search terms
+### Lesson 10: RAG Systems Enable Semantic Library Search
+- Traditional keyword search misses semantic relationships (e.g., “AI agent” vs. “LLM assistant”).  
+- Retrieval‑Augmented Generation (RAG) transforms libraries into searchable knowledge bases.  
+
+**Implementation**
+- Extract text from title + abstract + notes + tags for each item.  
+- Create embeddings using `sentence‑transformers` (model `all-MiniLM-L6-v2`).  
+- Build a FAISS index for millisecond‑scale similarity search.  
+- Query with natural language rather than exact keywords.  
+
+**Benefits**
+- Finds conceptually related items even with different terminology.  
+- Provides relevance scoring (0‑1) for result ranking.  
+- Enables natural‑language questioning of your library.  
+- Complements traditional organization with discovery capabilities.  
+
+**Reference**: `references/rag-system-lessons.md`.  
+**Storage**: ~20‑30 MB for a ~5 000‑item library.  
+**Performance**: <1 second query times after index loading.
+
+### Lesson 11: Quota Optimization for Sync Storage Limits
+- Even with file syncing disabled, Zotero libraries consume sync quota through metadata.  
+- **Key quota consumers**: item metadata, notes, annotations, tags, collections, and relations.  
+
+**Optimization Strategies**
+- Empty trash regularly (high impact, immediate results).  
+- Review and delete rarely‑used tags (tags used 1‑2 times).  
+- Check annotations for bloat (very long highlights or extensive notes).  
+- Perform database maintenance (`VACUUM`) for local efficiency.  
+- Monitor quota usage via <https://www.zotero.org/settings/storage>.  
+
+**Reference**: `references/quota-optimization-lessons.md`.  
+**Verification**: Wait 10‑15 minutes after changes for sync to update.  
+**Batch Awareness**: Use small batch sizes (10‑20 items) with appropriate delays when implementing optimizations.
+
+## Issues & Solutions
+
+### Poor Search Results
+- **Cause**: Overly broad or narrow search terms.  
 - **Solutions**:
-  1. Start with broad terms, then add specificity
-  2. Use field-specific searches when available (title vs. abstract vs. tags)
-  3. Consider synonyms and related terms
-  4. Examine result quality and adjust accordingly
+  1. Start with broad terms, then add specificity.  
+  2. Use field‑specific searches when available (title vs. abstract vs. tags).  
+  3. Consider synonyms and related terms.  
+  4. Examine result quality and adjust accordingly.
 
-### Issue: Performance Problems with Large Libraries
-- **Cause**: API limits, processing time
+### Performance Problems with Large Libraries
+- **Cause**: API limits, processing time.  
 - **Solutions**:
-  1. Batch processing (e.g., 100 items at a time)
-  2. Use caching for repeated queries
-  3. Focus on substantive items first
-  4. Consider exporting library for local analysis if needed
+  1. Batch processing (e.g., 100 items at a time).  
+  2. Use caching for repeated queries.  
+  3. Focus on substantive items first.  
+  4. Consider exporting the library for local analysis if needed.
 
-### Issue: Ambiguous Item Assignment
-- **Cause**: Items fitting multiple topics
+### Ambiguous Item Assignment
+- **Cause**: Items fitting multiple topics.  
 - **Solutions**:
-  1. Create tie-breaker rules (e.g., prefer newer items, prefer specific over general)
-  2. Allow dual filing when appropriate (tags can indicate multiple topics)
-  3. Create "interdisciplinary" collections for borderline cases
-  4. Manual review for high-value ambiguous items
+  1. Create tie‑breaker rules (e.g., prefer newer items, prefer specific over general).  
+  2. Allow dual filing when appropriate (tags can indicate multiple topics).  
+  3. Create “interdisciplinary” collections for borderline cases.  
+  4. Manual review for high‑value ambiguous items.
 
 ## Best Practices
 
-### For Initial Analysis
-- Always start with a connection test
-- Use multiple approaches: sampling + targeted searches
-- Check existing collections as ground truth
-- Consider library size when choosing methods
-- **User Preference**: Provide analysis and plans, then request confirmation before acting (proactive but permission-based)
+### Initial Analysis
+- Always start with a connection test.  
+- Use multiple approaches: sampling + targeted searches.  
+- Check existing collections as ground truth.  
+- Consider library size when choosing methods.  
+- **User Preference**: Provide analysis and plans, then request confirmation before acting (proactive but permission‑based).
 
-### For Topic Definition
-- Create mutually exclusive and collectively exhaustive topics when possible
-- Use clear, descriptive names that users will understand
-- Provide examples of what belongs in each topic
-- Consider both broad fields and specific subtopics
-- **User Preference**: Use markdown formatting and code blocks for clarity
+### Topic Definition
+- Create mutually exclusive and collectively exhaustive topics when possible.  
+- Use clear, descriptive names that users will understand.  
+- Provide examples of what belongs in each topic.  
+- Consider both broad fields and specific subtopics.  
+- **User Preference**: Use markdown formatting and code blocks for clarity.
 
-### For Implementation
-- Process in batches with progress reporting
-- Maintain detailed logs for rollback capability
-- Verify after each batch if possible
-- Provide clear before/after comparisons
-- **User Preference**: Provide regular progress updates during long-running processes
-- **Optimization**: Use small batch sizes (10-20 items) with appropriate delays (1-2 seconds) to prevent API timeouts
-- **Error Handling**: Handle version conflicts gracefully by retrieving fresh item data when needed
-- **User Preference**: Be transparent about limitations and errors rather than pretending they don't exist
-
-### For User Collaboration
-- Present plans in clear, understandable formats
-- Use visualizations when helpful (charts, tables)
-- Explain reasoning behind recommendations
-- Be ready to adapt based on user expertise
-- **Security Note**: API keys should be stored in secure credential stores (like ~/.hermes/.env for Hermes) rather than exposed in logs or memory
-- **User Preference**: Be transparent about limitations and errors rather than pretending they don't exist
-- **Security Note**: API keys should be stored in secure credential stores (like ~/.hermes/.env for Hermes) rather than exposed in logs or memory
-
-## Example: Plant Biology Discovery (from session with Matt)
-
-During analysis of Matt's Zotero library (5,292 items):
-- Initial sample (100 items) via topic modeling suggested limited plant content
-- Targeted search using plant evolution terms revealed:
-  - 858 unique items (~16.2% of library) matching plant/botany/evolution terms
-  - Core phylogenetics work: APG classifications, plastid phylogenomics
-  - Multiple plant groups: bryophytes, gymnosperms, angiosperms
-  - Various methodologies: DNA barcoding, phylogenomics, molecular dating
-- **Reason for initial miss**: Many items were attachments with generic titles, annotations without meaningful titles, and specialized terminology not surfacing in initial keyword analysis
-
-This led to adding "Plant Biology & Evolution" and "Phylogenetics & Systematics" to the organization plan.
-
-## Integration with Research Workflows
-
-Once organized, the library can power:
-- **AI Research Assistants**: Agents that can search, summarize, and synthesize from your library
-- **Literature Review Automation**: Generate reviews on specific topics from your actual collections
-- **Training Material Development**: Create exercises and examples from your research
-- **Project Support**: Quickly find background literature for new projects
-- **Knowledge Discovery**: See connections between related works in your library
-
-## Next Steps for Enhancement\n\n1. **Machine Learning Enhancement**: Train classifiers on user-provided examples for better accuracy\n2. **Hierarchical Organization**: Create broad topics with subcollections for granularity\n3. **Temporal Analysis**: Track how research interests evolve over time\n4. **Collaboration Features**: Enable sharing organizational schemes with colleagues\n5. **Maintenance Mode**: Set up periodic checks to keep new items organized\n6. **Optimized Processing**: Implement the batch processing strategies from `references/optimized-batch-processing-lessons.md` for all large-scale library operations\n7. **User Preference Integration**: Formalize the proactive-but-permission-based approach and regular progress reporting as core principles of the skill\n8. **Arxiv Integration**: Implement automated workflows to file new Arxiv papers from AI briefings into relevant Zotero collections (see `references/arxiv-paper-filing-lessons.md` for detailed implementation and lessons learned)\n9. **RAG System Enhancement**: Develop the semantic search capabilities further with hybrid search, metadata enrichment, and incremental updates (see `references/rag-system-lessons.md` as foundation)
+### Implementation
+- Process in batches with progress reporting.  
+- Maintain detailed logs for rollback capability.  
+- Verify after each batch if possible.  
+- Provide clear before/after comparisons.  
+- **User Preference**: Provide regular progress updates during long‑running processes.  
+- **Optimization**: Use small batch sizes (10‑20 items) with appropriate delays (1‑2 seconds) to prevent API timeouts.  
+- **Error Handling**: Handle version conflicts gracefully by
