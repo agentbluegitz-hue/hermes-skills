@@ -18,14 +18,7 @@ This skill provides methodologies for analyzing personal Zotero libraries to dis
 
 Personal research libraries (like Zotero) often accumulate thousands of items over time, with significant portions remaining unfiled or poorly organized. This creates inefficiencies in research workflows where users cannot easily discover relevant materials for new projects, literature reviews, or training material development.
 
-The Zotero Library Organizer skill helps users:
-- Discover hidden topical structure in their libraries
-- Identify significant research domains they may have forgotten about
-- Automatically organize unfiled items into meaningful collections
-- Create a browsable knowledge base that enhances research productivity
-- Prepare libraries for use with AI research assistants
-
-## Core Workflow
+The Zotero Library Organizer skill helps users:\n- Discover hidden topical structure in their libraries\n- Identify significant research domains they may have forgotten about\n- Automatically organize unfiled items into meaningful collections\n- Create a browsable knowledge base that enhances research productivity\n- Prepare libraries for use with AI research assistants\n- **Stay current with research**: Automatically process AI news briefings to file relevant Arxiv papers (see Lesson 8)\n\n## Core Workflow
 
 ### Phase 1: Library Assessment
 ```markdown
@@ -184,17 +177,7 @@ When initial analysis suggests missing domains or when users suspect specific co
 
 ## Key Lessons Learned
 
-### Lesson 8: Automated Arxiv Paper Filing from AI Briefings
-- AI news briefings often contain links to recent Arxiv papers relevant to specific domains
-- Implement automated detection of Arxiv links in briefing content
-- File these papers directly into Zotero with appropriate tags
-- **Workflow**: 
-  1. Generate daily AI briefing with Arxiv paper detection
-  2. Extract Arxiv IDs/URLs from briefing
-  3. For each paper: get metadata, prepare Zotero item, file with relevant tags
-  4. Avoid duplicates by checking existing items
-  5. Use small batches and appropriate delays to prevent API overload
-- **Reference**: See `references/arxiv-paper-filing-lessons.md` for detailed workflow and implementation discovered during session with Matt
+### Lesson 8: Automated Arxiv Paper Filing from AI Briefings\\n- AI news briefings often contain links to recent Arxiv papers relevant to specific domains\\n- Implement automated detection of Arxiv links in briefing content\\n- File these papers directly into Zotero with appropriate tags\\n- **Standard Workflow**: \\n  1. Generate daily AI briefing with Arxiv paper detection\\n  2. Extract Arxiv IDs/URLs from briefing\\n  3. For each paper: get metadata, prepare Zotero item, file with relevant tags\\n  4. Avoid duplicates by checking existing items\\n  5. Use small batches and appropriate delays to prevent API overload\\n- **Cron-Specific Implementation** (as refined in session 2026-07-01):\\n  1. Find most recent briefing: `ls -t /tmp/ai_briefing_*.md 2>/dev/null | head -1` (fallback to home directory)\\n  2. Extract HTTP/HTTPS URLs: `grep -oE 'https?://[^[:space:]]+' "$latest"`\\n  3. Extract DOIs and convert to URLs: `grep -oE '10\\\\.[0-9]{4,9}/[-._;()/:A-Z0-9]+' "$latest" -i` then prefix with `https://doi.org/`\\n  4. Filter for target domains: `grep -E '(arxiv\\\\.org|biorxiv\\\\.org|medrxiv\\\\.org|ssrn\\\\.com|^https://doi\\\\.org/)'`\\n  5. Deduplicate and save: `sort -u > /home/agent-blue/.hermes/arxiv_to_check.txt`\\n  6. Execute filing script: `python3 /home/agent-blue/.hermes/skills/zotero-library-organizer/scripts/file_missing_arxiv.py`\\n- **Key Fixes Learned**:\\n  - Removed dependency on `hermes_tools` by using direct file I/O for better reliability in cron environments\\n  - Fixed Arxiv ID extraction regex pattern to properly handle version numbers\\n  - Used virtual environments for dependency installation when system-wide installation is blocked\\n  - Corrected file path handling in cron environments (avoiding concatenation errors with `find` output)\\n- **Reference**: See `references/arxiv-paper-filing-lessons.md` for detailed workflow and implementation discovered during session with Matt
   2. Use direct API approach (requires credentials, works when desktop open)
   3. Use read-only copy of database
   ## Key Lessons Learned
@@ -308,14 +291,4 @@ Once organized, the library can power:
 - **Project Support**: Quickly find background literature for new projects
 - **Knowledge Discovery**: See connections between related works in your library
 
-## Next Steps for Enhancement
-
-1. **Machine Learning Enhancement**: Train classifiers on user-provided examples for better accuracy
-2. **Hierarchical Organization**: Create broad topics with subcollections for granularity
-3. **Temporal Analysis**: Track how research interests evolve over time
-4. **Collaboration Features**: Enable sharing organizational schemes with colleagues
-5. **Maintenance Mode**: Set up periodic checks to keep new items organized
-6. **Optimized Processing**: Implement the batch processing strategies from `references/optimized-batch-processing-lessons.md` for all large-scale library operations
-7. **User Preference Integration**: Formalize the proactive-but-permission-based approach and regular progress reporting as core principles of the skill
-8. **Arxiv Integration**: Implement automated workflows to file new Arxiv papers from AI briefings into relevant Zotero collections (see `references/arxiv-paper-filing-lessons.md` as starting point)
-9. **RAG System Enhancement**: Develop the semantic search capabilities further with hybrid search, metadata enrichment, and incremental updates (see `references/rag-system-lessons.md` as foundation)
+## Next Steps for Enhancement\n\n1. **Machine Learning Enhancement**: Train classifiers on user-provided examples for better accuracy\n2. **Hierarchical Organization**: Create broad topics with subcollections for granularity\n3. **Temporal Analysis**: Track how research interests evolve over time\n4. **Collaboration Features**: Enable sharing organizational schemes with colleagues\n5. **Maintenance Mode**: Set up periodic checks to keep new items organized\n6. **Optimized Processing**: Implement the batch processing strategies from `references/optimized-batch-processing-lessons.md` for all large-scale library operations\n7. **User Preference Integration**: Formalize the proactive-but-permission-based approach and regular progress reporting as core principles of the skill\n8. **Arxiv Integration**: Implement automated workflows to file new Arxiv papers from AI briefings into relevant Zotero collections (see `references/arxiv-paper-filing-lessons.md` for detailed implementation and lessons learned)\n9. **RAG System Enhancement**: Develop the semantic search capabilities further with hybrid search, metadata enrichment, and incremental updates (see `references/rag-system-lessons.md` as foundation)

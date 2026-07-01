@@ -1,56 +1,104 @@
-# Automated Arxiv Paper Filing from AI Briefings
+# Arxiv Paper Filing from AI Briefings - Lessons Learned
 
-## Lesson Learned: Integrating Arxiv Paper Detection with Briefing Automation
+## Overview
+This document captures the specific implementation details and lessons learned for automatically filing Arxiv papers mentioned in AI daily briefings into Zotero, particularly in cron environments where user interaction is not possible.
 
-During work on Matt's AI briefing automation system (June 2026), we enhanced the daily briefing workflow to automatically detect and file relevant Arxiv papers into the Zotero library.
+## Cron Environment Challenges
+1. **No user interaction**: Cannot use interactive tools or wait for approvals
+2. **File path issues**: Complex output from find commands can cause parsing errors
+3. **Tool restrictions**: execute_code is blocked in cron mode for security
+4. **Environment limitations**: May lack pip or have restricted package installation
 
-### Problem
-- Daily AI briefings contain links to recent research that should be preserved in Zotero
-- Manual filing is time-consuming and error-prone
-- Risk of missing important papers or creating duplicates
+## Refined Implementation
 
-### Solution Implemented
-1. **Enhanced Briefing Generation** - Updated the daily briefing cron job to:
-   - Search for general AI news
-   - Search recent Arxiv papers on AI agents, LLMs, and multi-agent systems
-   - Include both in the briefing with summaries
-   - Run daily at 6:30 AM EDT
+### Step 1: Find Most Recent Briefing
+```bash
+# Primary method - check /tmp first (where briefings are typically generated)
+latest=$(ls -t /tmp/ai_briefing_*.md 2>/dev/null | head -1)
 
-2. **Arxiv Detection Script** - Created a workflow to:
-   - Extract Arxiv IDs/URLs from briefing content
-   - For each paper: get metadata, prepare Zotero item, file with relevant tags
-   - Avoid duplicates by checking existing items
-   - Use small batches and appropriate delays to prevent API overload
+# Fallback to home directory if not found in /tmp
+if [ -z "$latest" ]; then
+    latest=$(ls -t /home/agent-blue/ai_briefing_*.md 2>/dev/null | head -1)
+fi
 
-### Technical Implementation
-The solution uses:
-- **pyzotero** library with credentials derived from Hermes MCP configuration
-- Proper Zotero API usage: working with item data dictionaries, not just keys
-- Appropriate item types (`blogPost` for Arxiv preprints)
-- Meaningful tagging strategy (AI Agents, LLM, Multi-Agent Systems, etc.)
-- Duplicate prevention through URL/title checking
+# Exit if no briefing found
+if [ -z "$latest" ]; then
+    echo "No AI briefing file found."
+    exit 1
+fi
+echo "Processing $latest"
+```
 
-### Key Files Created
-- `/home/agent-blue/file_agent_papers.py` - Implementation script for filing AI agent papers
-- Enhanced briefing generation prompt in cron job (Job ID: `08db831129d5`)
-- Arxiv checking script and cron job (Job ID: `b22ae9ece1f6`) for preparation
+### Step 2: Extract and Filter URLs
+```bash
+# Extract HTTP/HTTPS URLs
+urls=$(grep -oE 'https?://[^[:space:]]+' "$latest")
 
-### Example Papers Filed
-From the June 29, 2026 briefing, these Arxiv papers were successfully filed:
-1. "Agentic Software: How AI Agents Are Restructuring the Software Paradigm" (2606.05608)
-2. "MetaForge: A Self-Evolving Multimodal Agent that Retrieves, Adapts, and Forges Tools On Demand" (2606.01801)  
-3. "Are We Ready For An Agent-Native Memory System?" (2606.24775)
+# Extract DOIs and convert to full URLs
+dois=$(grep -oE '10\\.[0-9]{4,9}/[-._;()/:A-Z0-9]+' "$latest" -i)
+doi_urls=""
+for doi in $dois; do
+    doi_urls="$doi_urls https://doi.org/$doi"
+done
 
-### Best Practices
-- Run Arxiv detection shortly after briefing generation (e.g., 15 minutes later)
-- Use small batches (5-10 papers) with 1-2 second delays to prevent API overload
-- Tag papers with both domain-specific and general categories for easy retrieval
-- Always verify successful filing before considering the automation complete
-- Maintain logs of filing attempts for troubleshooting
+# Combine all URLs
+all_urls="$urls $doi_urls"
 
-### Integration with Zotero Library Organizer
-This workflow complements the broader library organization efforts by:
-- Ensuring new relevant research is automatically captured
-- Providing a steady stream of content for collection analysis
-- Keeping the library current with state-of-the-art agent research
-- Reducing manual filing burden for researchers
+# Filter for target domains and deduplicate
+echo "$all_urls" | tr ' ' '\\n' | grep -E '(arxiv\\.org|biorxiv\\.org|medrxiv\\.org|ssrn\\.com|^https://doi\\.org/)' | sort -u > /home/agent-blue/.hermes/arxiv_to_check.txt
+
+# Report results
+count=$(wc -l < /home/agent-blue/.hermes/arxiv_to_check.txt)
+echo "Saved $count URLs/DOIs to /home/agent-blue/.hermes/arxiv_to_check.txt"
+```
+
+### Step 3: Execute Filing Script
+```bash
+script_path="/home/agent-blue/.hermes/skills/zotero-library-organizer/scripts/file_missing_arxiv.py"
+if [ -f "$script_path" ]; then
+    echo "Running $script_path"
+    python3 "$script_path"
+else
+    echo "Script not found: $script_path"
+    exit 1
+fi
+```
+
+## Key Fixes and Improvements
+
+### 1. File Path Handling
+**Problem**: Using `find` with `-printf '%T@ %p\\n'` produced output with timestamps that, when used as input to grep, created invalid file paths like:
+```
+/tmp/ai_briefing_2026-07-01.md 1782904196.0982274230
+```
+This caused grep to fail with "No such file or directory" errors.
+
+**Solution**: Use `ls -t` instead, which outputs clean filenames without timestamps.
+
+### 2. DOI Extraction Robustness
+**Problem**: Simple DOI patterns missed version numbers or had issues with special characters.
+
+**Solution**: Use robust regex pattern `10\\.[0-9]{4,9}/[-._;()/:A-Z0-9]+` with case-insensitive flag.
+
+### 3. Environment Adaptation
+**Problem**: Cron jobs cannot use `execute_code` or interactive tools due to security restrictions.
+
+**Solution**: Use pure bash/file I/O approaches that work within cron constraints.
+
+### 4. Error Handling
+**Problem**: Silent failures when no briefings are found or when scripts are missing.
+
+**Solution**: Explicit error checking and informative exit messages.
+
+## Verification Steps
+1. Confirm briefing file exists and is readable
+2. Verify extracted URLs match expected patterns
+3. Check that output file contains valid Arxiv/biorxiv/medrxiv/ssrn/doi URLs
+4. Ensure filing script executes without errors
+5. Validate that any new papers are properly added to Zotero (or skipped if duplicates)
+
+## Maintenance Notes
+- This implementation assumes briefings follow the naming pattern `ai_briefing_YYYY-MM-DD.md`
+- The fallback to home directory covers cases where briefings might be stored elsewhere
+- Output file path (`/home/agent-blue/.hermes/arxiv_to_check.txt`) should be consistent with what the filing script expects
+- Consider adding logging for audit purposes in production environments
